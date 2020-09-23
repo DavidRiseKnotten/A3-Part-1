@@ -1,4 +1,4 @@
-package main.java.no.ntnu.datakomm.chat;
+package no.ntnu.datakomm.chat;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;

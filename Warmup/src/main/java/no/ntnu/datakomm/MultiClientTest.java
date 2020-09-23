@@ -1,4 +1,4 @@
-package main.java.no.ntnu.datakomm;
+package no.ntnu.datakomm;
 
 /**
  * A class used to test whether the server can handle multiple TCP client simultaneously (a multi-threaded server)

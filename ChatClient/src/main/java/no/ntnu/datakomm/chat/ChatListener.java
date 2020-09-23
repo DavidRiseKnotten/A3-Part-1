@@ -1,4 +1,4 @@
-package main.java.no.ntnu.datakomm.chat;
+package no.ntnu.datakomm.chat;
 
 /**
  * Interface for a listener that can handle events received from the server
