@@ -1,4 +1,4 @@
-package no.ntnu.datakomm.chat;
+package main.java.no.ntnu.datakomm.chat;
 
 import java.io.IOException;
 import java.net.URL;

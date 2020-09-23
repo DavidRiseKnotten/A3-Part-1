@@ -1,4 +1,4 @@
-package no.ntnu.datakomm;
+package main.java.no.ntnu.datakomm;
 
 /**
  * A Simple TCP server, used as a warm-up exercise for assignment A4.
