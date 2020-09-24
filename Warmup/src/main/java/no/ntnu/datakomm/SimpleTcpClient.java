@@ -1,5 +1,11 @@
 package no.ntnu.datakomm;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+
 /**
  * A Simple TCP client, used as a warm-up exercise for assignment A4.
  */
@@ -8,6 +14,8 @@ public class SimpleTcpClient {
     private static final String HOST = "localhost";
     // TCP port
     private static final int PORT = 1301;
+
+    private Socket socket;
 
     /**
      * Run the TCP Client.
@@ -101,9 +109,16 @@ public class SimpleTcpClient {
      * @return True when connection established, false otherwise
      */
     private boolean connectToServer(String host, int port) {
+        try {
+            socket = new Socket(host, port);
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
         // TODO - implement this method
         // Remember to catch all possible exceptions that the Socket class can throw.
-        return false;
     }
 
     /**
@@ -113,13 +128,24 @@ public class SimpleTcpClient {
      * @return True when message successfully sent, false on error.
      */
     private boolean sendRequestToServer(String request) {
+        try {
+            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            if (request == null) return false;
+            out.println(request);
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+
+
         // TODO - implement this method
         // Hint: What can go wrong? Several things:
         // * Connection closed by remote host (server shutdown)
         // * Internet connection lost, timeout in transmission
         // * Connection not opened.
         // * What is the request is null or empty?
-        return false;
     }
 
     /**
@@ -129,9 +155,15 @@ public class SimpleTcpClient {
      * (not included in the returned value).
      */
     private String readResponseFromServer() {
+        try {
+            BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            return in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
         // TODO - implement this method
         // Similarly to other methods, exception can happen while trying to read the input stream of the TCP Socket
-        return null;
     }
 
     /**

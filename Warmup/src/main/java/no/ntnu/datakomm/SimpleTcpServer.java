@@ -1,5 +1,10 @@
 package no.ntnu.datakomm;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
 /**
  * A Simple TCP server, used as a warm-up exercise for assignment A4.
  */
@@ -12,6 +17,19 @@ public class SimpleTcpServer {
     }
 
     public void run() {
+        boolean mustRun = true;
+
+        try {
+            ServerSocket welcomeSocket = new ServerSocket(1301);
+            while (mustRun) {
+                Socket clientSocket = welcomeSocket.accept();
+
+                ClientHandler clientHandler = new ClientHandler(clientSocket);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
         // TODO - implement the logic of the server, according to the protocol.
         // Take a look at the tutorial to understand the basic blocks: creating a listening socket,
         // accepting the next client connection, sending and receiving messages and closing the connection
