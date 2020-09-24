@@ -23,9 +23,12 @@ public class SimpleTcpServer {
             ServerSocket welcomeSocket = new ServerSocket(1301);
             while (mustRun) {
                 Socket clientSocket = welcomeSocket.accept();
+                System.out.println("Connection established");
 
                 ClientHandler clientHandler = new ClientHandler(clientSocket);
+                clientHandler.start();
             }
+            welcomeSocket.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

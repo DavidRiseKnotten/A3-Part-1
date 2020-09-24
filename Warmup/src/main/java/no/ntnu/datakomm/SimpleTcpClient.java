@@ -97,8 +97,14 @@ public class SimpleTcpClient {
      * @return True on success, false otherwise
      */
     private boolean closeConnection() {
+        try {
+            socket.close();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
         // TODO - implement this method
-        return false;
     }
 
     /**
@@ -129,7 +135,7 @@ public class SimpleTcpClient {
      */
     private boolean sendRequestToServer(String request) {
         try {
-            PrintWriter out = new PrintWriter(socket.getOutputStream());
+            PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
             if (request == null) return false;
             out.println(request);
 
