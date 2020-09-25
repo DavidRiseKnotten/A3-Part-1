@@ -46,9 +46,13 @@ public class TCPClient {
      * in the process of being closed. with "synchronized" keyword we make sure
      * that no two threads call this method in parallel.
      */
-    public synchronized void disconnect() throws IOException {
+    public synchronized void disconnect() {
         if (isConnectionActive()) {
-            connection.close();
+            try {
+                connection.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         // TODO Step 4: implement this method (Maybe done)
         // Hint: remember to check if connection is active
