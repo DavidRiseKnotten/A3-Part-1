@@ -105,7 +105,7 @@ public class TCPClient {
     public void tryLogin(String username) {
         String cmd = "login " + username;
         sendCommand(cmd);
-        // TODO Step 3: implement this method
+        // TODO Step 3: implement this method (Maybe done)
         // Hint: Reuse sendCommand() method
     }
 
@@ -114,6 +114,7 @@ public class TCPClient {
      * clear your current user list and use events in the listener.
      */
     public void refreshUserList() {
+
         // TODO Step 5: implement this method
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
         // client and server exchange for user listing.
@@ -127,10 +128,11 @@ public class TCPClient {
      * @return true if message sent, false on error
      */
     public boolean sendPrivateMessage(String recipient, String message) {
-        // TODO Step 6: Implement this method
+        String cmd = "privmsg " + recipient + " " + message;
+        return sendCommand(cmd);
+        // TODO Step 6: Implement this method (Maybe Done)
         // Hint: Reuse sendCommand() method
         // Hint: update lastError if you want to store the reason for the error.
-        return false;
     }
 
 
