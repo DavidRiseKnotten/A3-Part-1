@@ -6,7 +6,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TCPClient {
-    private PrintWriter toServer;
+    private PrintWriter
+
+            toServer;
     private BufferedReader fromServer;
     private Socket connection;
 
@@ -140,6 +142,7 @@ public class TCPClient {
      * Send a request for the list of commands that server supports.
      */
     public void askSupportedCommands() {
+        sendCommand("help");
         // TODO Step 8: Implement this method
         // Hint: Reuse sendCommand() method
     }
