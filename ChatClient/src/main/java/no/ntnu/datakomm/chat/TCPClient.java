@@ -255,6 +255,9 @@ public class TCPClient {
      * Internet error)
      */
     private void onDisconnect() {
+        for (ChatListener listener : listeners) {
+            listener.onDisconnect();
+        }
         // TODO Step 4: Implement this method
         // Hint: all the onXXX() methods will be similar to onLoginResult()
     }
@@ -265,6 +268,9 @@ public class TCPClient {
      * @param users List with usernames
      */
     private void onUsersList(String[] users) {
+        for (ChatListener listener : listeners) {
+          listener.onUserList(users);
+        }
         // TODO Step 5: Implement this method
     }
 
@@ -276,6 +282,10 @@ public class TCPClient {
      * @param text   Message text
      */
     private void onMsgReceived(boolean priv, String sender, String text) {
+        for (ChatListener listener : listeners) {
+            TextMessage msg = new TextMessage(sender, priv, text);
+            listener.onMessageReceived(msg);
+        }
         // TODO Step 7: Implement this method
     }
 
@@ -285,6 +295,10 @@ public class TCPClient {
      * @param errMsg Error description returned by the server
      */
     private void onMsgError(String errMsg) {
+        for (ChatListener listener : listeners) {
+            listener.onMessageError(errMsg);
+        }
+
         // TODO Step 7: Implement this method
     }
 
@@ -295,7 +309,7 @@ public class TCPClient {
      */
     private void onCmdError(String errMsg) {
         for (ChatListener listener : listeners) {
-            listener.onMessageError(errMsg);
+            listener.onCommandError(errMsg);
         }
         // TODO Step 7: Implement this method
     }
