@@ -6,9 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class TCPClient {
-    private PrintWriter
-
-            toServer;
+    private PrintWriter toServer;
     private BufferedReader fromServer;
     private Socket connection;
 
@@ -116,8 +114,22 @@ public class TCPClient {
      * clear your current user list and use events in the listener.
      */
     public void refreshUserList() {
+        String cmd = "users";
+        sendCommand(cmd);
+        String[] arr, userList;
+        try {
+            String response = fromServer.readLine();
+            arr = response.split(" ");
+            userList = new String[arr.length-1];
+            for(int i = 1; i<arr.length; i++) {
+                userList[i-1] = arr[i];
+            }
+            onUsersList(userList);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        // TODO Step 5: implement this method
+        // TODO Step 5: implement this method (Maybe done)
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
         // client and server exchange for user listing.
     }
@@ -143,7 +155,7 @@ public class TCPClient {
      */
     public void askSupportedCommands() {
         sendCommand("help");
-        // TODO Step 8: Implement this method
+        // TODO Step 8: Implement this method (Maybe done)
         // Hint: Reuse sendCommand() method
     }
 
@@ -154,11 +166,19 @@ public class TCPClient {
      * @return one line of text (one command) received from the server
      */
     private String waitServerResponse() {
-        // TODO Step 3: Implement this method
-        // TODO Step 4: If you get I/O Exception or null from the stream, it means that something has gone wrong
+        try {
+            String response = fromServer.readLine();
+            if (response == null) {
+                throw new IOException("null response");
+            }
+            return response;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "error";
+        }
+        // TODO Step 3: Implement this method (Maybe done)
+        // TODO Step 4: If you get I/O Exception or null from the stream, it means that something has gone wrong (maybe done)
         // with the stream and hence the socket. Probably a good idea to close the socket in that case.
-
-        return null;
     }
 
     /**
@@ -191,6 +211,14 @@ public class TCPClient {
      */
     private void parseIncomingCommands() {
         while (isConnectionActive()) {
+            String incomingCmd = waitServerResponse();
+            String command = incomingCmd.toLowerCase().split(" ")[0];
+            switch (command) {
+                case "error":
+                    disconnect();
+                    onDisconnect();
+                    break;
+            }
             // TODO Step 3: Implement this method
             // Hint: Reuse waitServerResponse() method
             // Hint: Have a switch-case (or other way) to check what type of response is received from the server
@@ -258,7 +286,7 @@ public class TCPClient {
         for (ChatListener listener : listeners) {
             listener.onDisconnect();
         }
-        // TODO Step 4: Implement this method
+        // TODO Step 4: Implement this method (Maybe done)
         // Hint: all the onXXX() methods will be similar to onLoginResult()
     }
 
@@ -271,7 +299,7 @@ public class TCPClient {
         for (ChatListener listener : listeners) {
           listener.onUserList(users);
         }
-        // TODO Step 5: Implement this method
+        // TODO Step 5: Implement this method (Maybe done)
     }
 
     /**
@@ -286,7 +314,7 @@ public class TCPClient {
             TextMessage msg = new TextMessage(sender, priv, text);
             listener.onMessageReceived(msg);
         }
-        // TODO Step 7: Implement this method
+        // TODO Step 7: Implement this method (Maybe done)
     }
 
     /**
@@ -299,7 +327,7 @@ public class TCPClient {
             listener.onMessageError(errMsg);
         }
 
-        // TODO Step 7: Implement this method
+        // TODO Step 7: Implement this method (Maybe done)
     }
 
     /**
@@ -311,7 +339,7 @@ public class TCPClient {
         for (ChatListener listener : listeners) {
             listener.onCommandError(errMsg);
         }
-        // TODO Step 7: Implement this method
+        // TODO Step 7: Implement this method (Maybe done)
     }
 
     /**
@@ -324,6 +352,6 @@ public class TCPClient {
         for(ChatListener listener : listeners) {
            listener.onSupportedCommands(commands);
         }
-        // TODO Step 8: Implement this method
+        // TODO Step 8: Implement this method (Maybe done)
     }
 }
