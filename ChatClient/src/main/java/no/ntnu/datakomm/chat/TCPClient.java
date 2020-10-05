@@ -130,18 +130,6 @@ public class TCPClient {
     public void refreshUserList() {
         String cmd = "users";
         sendCommand(cmd);
-        String[] arr, userList;
-        try {
-            String response = fromServer.readLine();
-            arr = response.split(" ");
-            userList = new String[arr.length-1];
-            for(int i = 1; i<arr.length; i++) {
-                userList[i-1] = arr[i];
-            }
-            onUsersList(userList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
         // TODO Step 5: implement this method (Maybe done)
         // Hint: Use Wireshark and the provided chat client reference app to find out what commands the
@@ -189,8 +177,9 @@ public class TCPClient {
         } catch (IOException e) {
             e.printStackTrace();
             disconnect();
-            return "error";
+            onDisconnect();
         }
+        return null;
         // TODO Step 3: Implement this method (Maybe done)
         // TODO Step 4: If you get I/O Exception or null from the stream, it means that something has gone wrong (maybe done)
         // with the stream and hence the socket. Probably a good idea to close the socket in that case.
@@ -227,6 +216,9 @@ public class TCPClient {
     private void parseIncomingCommands() {
         while (isConnectionActive()) {
             String incomingCmd = waitServerResponse();
+            if( incomingCmd == null) {
+                break;
+            }
             String command = "";
             String firstHandInformation = "";
             String secondHandInformation = "";
@@ -242,10 +234,6 @@ public class TCPClient {
                 firstHandInformation = arr[1];
 
             switch (command) {
-                case "error":
-                    disconnect();
-                    onDisconnect();
-                    break;
                 case "loginok":
                     onLoginResult(true,"");
                     System.out.println(command);
@@ -254,7 +242,9 @@ public class TCPClient {
                     onLoginResult(false, firstHandInformation);
                     break;
                 case "users":
-                    refreshUserList();
+                    String[] userList;
+                    userList = firstHandInformation.split(" ");
+                    onUsersList(userList);
                     break;
                 case "msg":
                     onMsgReceived(false, arr[1], secondHandInformation);
