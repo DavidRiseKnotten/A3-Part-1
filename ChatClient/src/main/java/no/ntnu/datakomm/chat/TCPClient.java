@@ -2,8 +2,7 @@ package no.ntnu.datakomm.chat;
 
 import java.io.*;
 import java.net.*;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class TCPClient {
     private PrintWriter toServer;
@@ -212,30 +211,76 @@ public class TCPClient {
     private void parseIncomingCommands() {
         while (isConnectionActive()) {
             String incomingCmd = waitServerResponse();
-            String command = incomingCmd.toLowerCase().split(" ")[0];
+            String command = "";
+            String firstHandInformation = "";
+            String secondHandInformation = "";
+
+            String[] arr = incomingCmd.split(" ", 3);
+            command = arr[0];
+
+            if(arr.length>2) {
+                secondHandInformation = arr[2];
+                firstHandInformation = arr[1] + " " + arr[2];
+            }
+            else if(arr.length>1)
+                firstHandInformation = arr[1];
+
+
             switch (command) {
                 case "error":
                     disconnect();
                     onDisconnect();
                     break;
+                case "loginok":
+                    onLoginResult(true,"");
+                    break;
+                case "loginerr":
+                    onLoginResult(false, firstHandInformation);
+                    break;
+                case "users":
+                    refreshUserList();
+                    break;
+                case "msg":
+                    onMsgReceived(false, arr[1], secondHandInformation);
+                    break;
+                case "privmsg":
+                    onMsgReceived(true, arr[1], secondHandInformation);
+                    break;
+                case "msgok":
+                    //Nothing needs to be done!
+                    break;
+                case "msgerr":
+                    onMsgError(firstHandInformation);
+                    break;
+                case "cmderr":
+                    onCmdError(firstHandInformation);
+                    break;
+                case "supported":
+                    onSupported(firstHandInformation.split(" "));
+                    break;
+                case "modeok":
+                    //Nothing needs to be done!
+                    break;
+                case "inbox":
+                    //TODO
+                    break;
             }
-            // TODO Step 3: Implement this method
+            // TODO Step 3: Implement this method (maybe done)
             // Hint: Reuse waitServerResponse() method
             // Hint: Have a switch-case (or other way) to check what type of response is received from the server
             // and act on it.
             // Hint: In Step 3 you need to handle only login-related responses.
             // Hint: In Step 3 reuse onLoginResult() method
 
-            // TODO Step 5: update this method, handle user-list response from the server
+            // TODO Step 5: update this method, handle user-list response from the server (maybe done)
             // Hint: In Step 5 reuse onUserList() method
 
-            // TODO Step 7: add support for incoming chat messages from other users (types: msg, privmsg)
-            // TODO Step 7: add support for incoming message errors (type: msgerr)
-            // TODO Step 7: add support for incoming command errors (type: cmderr)
+            // TODO Step 7: add support for incoming chat messages from other users (types: msg, privmsg) (maybe done)
+            // TODO Step 7: add support for incoming message errors (type: msgerr) (maybe done)
+            // TODO Step 7: add support for incoming command errors (type: cmderr) (maybe done)
             // Hint for Step 7: call corresponding onXXX() methods which will notify all the listeners
 
-            // TODO Step 8: add support for incoming supported command list (type: supported)
-
+            // TODO Step 8: add support for incoming supported command list (type: supported) (maybe done)
         }
     }
 
