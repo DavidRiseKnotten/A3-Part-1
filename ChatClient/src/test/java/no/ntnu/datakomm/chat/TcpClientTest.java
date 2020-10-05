@@ -212,6 +212,7 @@ public class TcpClientTest {
     public void testDisconnectFail() {
         TCPClient client = new TCPClient();
         client.disconnect();
+        assertTrue(true);
     }
 
     /**

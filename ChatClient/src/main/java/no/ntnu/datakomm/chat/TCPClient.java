@@ -9,6 +9,20 @@ public class TCPClient {
     private BufferedReader fromServer;
     private Socket connection;
 
+    public static void main(String[] args) {
+        TCPClient c = new TCPClient();
+         if( c.connect("datakomm.work", 1300)) {
+             System.out.println("ss");
+         }
+         if( c.isConnectionActive()) {
+             System.out.println("brr");
+         }
+        c.disconnect();
+         if( !c.isConnectionActive()) {
+             System.out.println("skskssk");
+         }
+    }
+
     // Hint: if you want to store a message for the last error, store it here
     private String lastError = null;
 
@@ -52,6 +66,7 @@ public class TCPClient {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            this.connection = null;
         }
         // TODO Step 4: implement this method (Maybe done)
         // Hint: remember to check if connection is active
@@ -173,6 +188,7 @@ public class TCPClient {
             return response;
         } catch (IOException e) {
             e.printStackTrace();
+            disconnect();
             return "error";
         }
         // TODO Step 3: Implement this method (Maybe done)
@@ -225,7 +241,6 @@ public class TCPClient {
             else if(arr.length>1)
                 firstHandInformation = arr[1];
 
-
             switch (command) {
                 case "error":
                     disconnect();
@@ -233,6 +248,7 @@ public class TCPClient {
                     break;
                 case "loginok":
                     onLoginResult(true,"");
+                    System.out.println(command);
                     break;
                 case "loginerr":
                     onLoginResult(false, firstHandInformation);
@@ -247,7 +263,7 @@ public class TCPClient {
                     onMsgReceived(true, arr[1], secondHandInformation);
                     break;
                 case "msgok":
-                    //Nothing needs to be done!
+                    System.out.println("msgok");
                     break;
                 case "msgerr":
                     onMsgError(firstHandInformation);
@@ -259,6 +275,7 @@ public class TCPClient {
                     onSupported(firstHandInformation.split(" "));
                     break;
                 case "modeok":
+                    System.out.println("modeok");
                     //Nothing needs to be done!
                     break;
                 case "inbox":
